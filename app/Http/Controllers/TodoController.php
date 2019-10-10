@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Todo as TodoResource;
 use App\Http\Resources\TodoCollection as TodoCollectionResource;
 use App\Todo;
+use App\Http\Requests\TodoStoreRequest;
 use Illuminate\Http\Request;
 use DB;
 
@@ -18,7 +19,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = DB::table('todos')->where('users_id', Auth::id())->get();
+        //$todos = DB::table('todos')->where('users_id', Auth::id())->get();
+        $todos = Todo::where('users_id', Auth::id())->get();
         return $todos;
     }
 
@@ -29,13 +31,9 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TodoStoreRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'priority' => 'required',
-        ]);
-        $todo = Todo::create($request->all() + ['users_id' => Auth::id()]);
+        $todo = Todo::create(array_merge($request->all(), ['users_id' => Auth::id()]));
         return new TodoResource($todo);
     }
 
@@ -47,7 +45,8 @@ class TodoController extends Controller
      */
     public function show($id)
     {
-        $todo = DB::table('todos')->where('users_id', Auth::id())->where('id',$id)->get();
+        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->get();
+
         return $todo;
 
     }
