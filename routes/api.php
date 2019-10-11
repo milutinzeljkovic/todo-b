@@ -23,7 +23,7 @@ Route::group(
 ], function() {
     Route::post('add', 'TodoController@store');
     Route::get('', 'TodoController@index');
-    Route::get('{id}', 'TodoController@show');
-    Route::put('{id}', 'TodoController@update');
-    Route::delete('{id}', 'TodoController@destroy');
+    Route::get('{todo}', 'TodoController@show');
+    Route::put('{todo}', 'TodoController@update')->middleware('can:update,todo');
+    Route::delete('/{todo}', 'TodoController@destroy')->middleware('can:delete,todo');
 });

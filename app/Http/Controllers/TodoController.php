@@ -31,7 +31,7 @@ class TodoController extends Controller
      */
     public function store(TodoStoreRequest $request)
     {
-        $todo = Todo::create(array_merge($request->all(), ['users_id' => Auth::id()]));
+        $todo = Todo::create(array_merge($request->validated(), ['users_id' => Auth::id()]));
         return new TodoResource($todo);
     }
 
@@ -41,9 +41,8 @@ class TodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Todo $todo)
     {
-        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->get();
         return $todo;
     }
 
@@ -56,19 +55,11 @@ class TodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TodoStoreRequest $request, Todo $todo)
     {
-        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->get();
-        $title= $request->all()['title'];
-        $description = $request->all()['description'];
-        $priority = $request->all()['priority'];
-        $completed = $request->all()['completed'];
-        $updatedTodo = Todo::where('id', $id)
-            ->update(['title' => $title, 'description' => $description, 'priority' => $priority,
-            'completed' => $completed
-            ]);
+        $id = $todo->id;
+        $todo->update($request->validated());
         return Todo::where('users_id', Auth::id())->where('id',$id)->get();
-
     }
 
     /**
@@ -77,9 +68,9 @@ class TodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Todo $todo)
     {
-        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->delete();
+        $todo = Todo::where('users_id', Auth::id())->where('id',$todo->id)->delete();
         if(!$todo)
             return response('',400);
         return Todo::where('users_id', Auth::id())->get();
