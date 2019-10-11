@@ -31,7 +31,7 @@ class TodoController extends Controller
      */
     public function store(TodoStoreRequest $request)
     {
-        $todo = Todo::create(array_merge($request->validated(), ['users_id' => Auth::id()]));
+        $todo = Todo::create(array_merge($request->all(), ['users_id' => Auth::id()]));
         return new TodoResource($todo);
     }
 
