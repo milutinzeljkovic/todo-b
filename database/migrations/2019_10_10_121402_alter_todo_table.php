@@ -26,6 +26,9 @@ class AlterTodoTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('todos', function (Blueprint $table) {
+            $table->string('description', 25)->change();
+        });
+
     }
 }
