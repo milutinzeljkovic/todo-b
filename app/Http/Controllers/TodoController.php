@@ -8,7 +8,6 @@ use App\Http\Resources\TodoCollection as TodoCollectionResource;
 use App\Todo;
 use App\Http\Requests\TodoStoreRequest;
 use Illuminate\Http\Request;
-use DB;
 
 class TodoController extends Controller
 {
@@ -19,7 +18,6 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //$todos = DB::table('todos')->where('users_id', Auth::id())->get();
         $todos = Todo::where('users_id', Auth::id())->get();
         return $todos;
     }
@@ -46,9 +44,7 @@ class TodoController extends Controller
     public function show($id)
     {
         $todo = Todo::where('users_id', Auth::id())->where('id',$id)->get();
-
         return $todo;
-
     }
 
 
@@ -62,17 +58,16 @@ class TodoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $todo = DB::table('todos')->where('users_id', Auth::id())->where('id',$id)->get();
+        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->get();
         $title= $request->all()['title'];
         $description = $request->all()['description'];
         $priority = $request->all()['priority'];
         $completed = $request->all()['completed'];
-        $updatedTodo = DB::table('todos')
-            ->where('id', $id)
+        $updatedTodo = Todo::where('id', $id)
             ->update(['title' => $title, 'description' => $description, 'priority' => $priority,
-                'completed' => $completed
+            'completed' => $completed
             ]);
-        return DB::table('todos')->where('users_id', Auth::id())->where('id',$id)->get();
+        return Todo::where('users_id', Auth::id())->where('id',$id)->get();
 
     }
 
@@ -84,9 +79,9 @@ class TodoController extends Controller
      */
     public function destroy($id)
     {
-        $todo = DB::table('todos')->where('users_id', Auth::id())->where('id',$id)->delete();
+        $todo = Todo::where('users_id', Auth::id())->where('id',$id)->delete();
         if(!$todo)
             return response('',400);
-        return DB::table('todos')->where('users_id', Auth::id())->get();
+        return Todo::where('users_id', Auth::id())->get();
     }
 }
