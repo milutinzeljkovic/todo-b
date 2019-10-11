@@ -11,6 +11,7 @@ class TodoStoreRequest extends FormRequest
         return [
             'title' => 'required',
             'description' => 'required',
+            'priority' => 'required'
         ];
     
     }
