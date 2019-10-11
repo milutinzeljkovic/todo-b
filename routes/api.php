@@ -17,3 +17,13 @@ Route::group([
 
 });
 
+
+Route::group(
+    ['prefix' => 'todos', 'middleware' => ['jwt.verify']
+], function() {
+    Route::post('add', 'TodoController@store');
+    Route::get('', 'TodoController@index');
+    Route::get('{id}', 'TodoController@show');
+    Route::put('{id}', 'TodoController@update');
+    Route::delete('{id}', 'TodoController@destroy');
+});
